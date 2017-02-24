@@ -1,0 +1,74 @@
+import json
+import csv
+import sys
+sys.path.append("/Users/Vikram/anaconda/lib/python3.4/site-packages")
+from shapely.geometry import shape, Point
+# load GeoJSON file containing sectors
+#with ('GEOJSONNeighborhoods.json', 'r') as f:
+with open('GEOJSONNeighborhoods.json') as f:  
+    js = json.load(f)
+
+# construct point based on lat/long returned by geocoder
+'''
+point = Point(47.655425, -122.306299)
+crimes = []
+with open('crimes.csv', 'rU') as csvfile:
+     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|', dialect='excel')
+     firstline = True;
+     counter = 0
+     for row in spamreader:
+        if(firstline):
+            firstline = False;
+        else:
+            if(counter % 200 == 0):
+                try:
+                    newval = [row[6], float(row[14]), float(row[15]), row[17]];
+                    point = Point(float(newval[1]), float(newval[2]))
+                    for feature in js['features']:
+                        polygon = shape(feature['geometry'])
+                        if polygon.contains(point):
+                            print(feature['properties']['S_HOOD'])
+                            newval.append(feature['properties']['S_HOOD'])
+                    crimes.append(newval)
+                except:
+                    print('none');
+        counter = counter + 1
+
+
+with open('crimes2.csv', 'wb') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    header = ['Crime','Latitude','Longitude','Year','Neighborhood']
+    spamwriter.writerow(header)
+    print(header);
+    for tup in crimes:
+        spamwriter.writerow(tup)
+'''
+permits = []
+with open('currentPermits.csv', 'rU') as csvfile:
+     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|', dialect='excel')
+     firstline = True;
+     counter = 0
+     for row in spamreader:
+        if(firstline):
+            firstline = False;
+        else:
+                try:
+                    newval = [row[1], row[6], row[8], row[11], float(row[13]),float(row[14])];
+                    point = Point(float(newval[5]), float(newval[4]))
+                    for feature in js['features']:
+                        polygon = shape(feature['geometry'])
+                        if polygon.contains(point):
+                            newval.append(feature['properties']['S_HOOD'])
+                    permits.append(newval)
+                except:
+                    print('none');
+        counter = counter + 1
+
+
+with open('permits.csv', 'wb') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    header = ['Permit Type','Value','Issue Date','Status','Latitude','Longitude', 'Neighborhood']
+    spamwriter.writerow(header)
+    print(header);
+    for tup in permits:
+        spamwriter.writerow(tup)
